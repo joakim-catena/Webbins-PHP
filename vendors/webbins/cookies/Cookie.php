@@ -35,6 +35,8 @@ class Cookie {
      * @return mixed
      */
     public static function get($key) {
+        assert(is_string($key), 'Key must be a string.');
+
         if (!self::has($key)) {
             throw new Exception('The cookie key don\'t exist.');
         }
@@ -49,6 +51,8 @@ class Cookie {
      * @return  void
      */
     public static function destroy($key, $path='/', $domain='') {
+        assert(is_string($key), 'Key must be a string.');
+
         if (!self::has($key)) {
             throw new Exception('The cookie key don\'t exist.');
         }
