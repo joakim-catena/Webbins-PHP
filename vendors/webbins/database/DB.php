@@ -138,36 +138,79 @@ class DB {
         return trim($string, ', ');
     }
 
+    /**
+     * Join.
+     * @param   string  $table
+     * @return  DB
+     */
     public function join($table) {
         $this->joins[] = new Join($table, Join::JOIN);
         return self::$self;
     }
 
+    /**
+     * Inner join.
+     * @param   string  $table
+     * @return  DB
+     */
     public function innerJoin($table) {
         $this->joins[] = new Join($table, Join::INNERJOIN);
         return self::$self;
     }
 
+    /**
+     * Outer join.
+     * @param   string  $table
+     * @return  DB
+     */
     public function outerJoin($table) {
         $this->joins[] = new Join($table, Join::OUTERJOIN);
         return self::$self;
     }
 
+    /**
+     * Left join.
+     * @param   string  $table
+     * @return  DB
+     */
     public function leftJoin($table) {
         $this->joins[] = new Join($table, Join::LEFTJOIN);
         return self::$self;
     }
 
+    /**
+     * Right join.
+     * @param   string  $table
+     * @return  DB
+     */
     public function rightJoin($table) {
         $this->joins[] = new Join($table, Join::RIGHTJOIN);
         return self::$self;
     }
 
-    public function on($on) {
-        $this->joins[Count($this->joins)-1]->setOn($on);
+    /**
+     * On. Attaches to the latest join.
+     * If the second column isn't passed, the method will evalute
+     * the first column as the whole "on query" and break it down
+     * to two columns with "=" as a separator.
+     * @param   string  $column1
+     * @param   string  $column2
+     * @return  DB
+     */
+    public function on($column1, $column2='') {
+        if (empty($column2)) {
+            preg_match('/^(.+?)=(.+?)$/', $column1, $matches);
+            $column1 = $matches[1];
+            $column2 = $matches[2];
+        }
+        $this->joins[Count($this->joins)-1]->setOn($column1, $column2);
         return self::$self;
     }
 
+    /**
+     * Return all joins and ons as a string.
+     * @return  string
+     */
     private function getJoins() {
         $string = '';
 
@@ -181,13 +224,22 @@ class DB {
         return trim($string);
     }
 
+    /**
+     * Set select.
+     * @param   string  $column
+     * @return  DB
+     */
     public function select($column) {
         $this->selects[] = $column;
         return self::$self;
     }
 
+    /**
+     * Get selects as a string. If no select has been
+     * set, then wildcard "*" will be returned as default.
+     * @return  string
+     */
     private function getSelects() {
-
         if (empty($this->selects)) {
             return '*';
         }
@@ -201,23 +253,60 @@ class DB {
         return trim($string, ', ');
     }
 
-    public function where($column, $compareOperator, $value) {
+    /**
+     * Where. If no compare operator is set, the method will evalute
+     * the string in $column as a single query, then break it down to
+     * column, compare operator and value by itself.
+     * where('ID=1')
+     * where('ID', '=', 1)
+     * @param   string  $column
+     * @param   string  $compareOperator
+     * @param   string  $value
+     * @return  DB
+     */
+    public function where($column, $compareOperator='', $value='') {
+        if (empty($compareOperator)) {
+            preg_match('/^(.+?)(=|>|<|>=|<=|<>|!=|!<|!>)(.+)$/', $column, $matches);
+            $column = $matches[1];
+            $compareOperator = $matches[2];
+            $value = $matches[3];
+        }
         $this->wheres[] = new Where($column, $compareOperator, $value);
         return self::$self;
     }
 
-    public function andWhere($column, $compareOperator, $value) {
+    /**
+     * And where. Calls "where()" and then adds an
+     * AND operator.
+     * @param   string  $column
+     * @param   string  $compareOperator
+     * @param   string  $value
+     * @return  DB
+     */
+    public function andWhere($column, $compareOperator='', $value='') {
         $this->where($column, $compareOperator, $value);
         $this->wheres[Count($this->wheres)-1]->setOperator(Where::AND_OPERATOR);
         return self::$self;
     }
 
-    public function orWhere($column, $compareOperator, $value) {
+    /**
+     * Or where. Calls "where()" and then adds an
+     * OR operator.
+     * @param   string  $column
+     * @param   string  $compareOperator
+     * @param   string  $value
+     * @return  DB
+     */
+    public function orWhere($column, $compareOperator='', $value='') {
         $this->where($column, $compareOperator, $value);
         $this->wheres[Count($this->wheres)-1]->setOperator(Where::OR_OPERATOR);
         return self::$self;
     }
 
+    /**
+     * Returns all wheres as a string.
+     * @return  string
+     */
     private function getWheres() {
         $string = '';
 
@@ -237,11 +326,19 @@ class DB {
         return '';
     }
 
+    /**
+     *  Order by.
+     *  @param  string  $column
+     *  @param  string  $order
+     */
     public function orderBy($column, $order) {
         $this->orderBys[] = new OrderBy($column, $order);
         return self::$self;
     }
 
+    /**
+     *  Get all order bys and return them as a string.
+     */
     private function getOrderBys() {
         $string = '';
 

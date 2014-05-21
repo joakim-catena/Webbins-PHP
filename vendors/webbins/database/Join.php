@@ -48,8 +48,9 @@ class Join {
         }
     }
 
-    public function setOn($on) {
-        $this->on = $on;
+    public function setOn($column1, $column2) {
+        assert(is_string($column1) && is_string($column2), 'Columns must be strings.');
+        $this->on = $column1.'='.$column2;
     }
 
     public function getOn() {
