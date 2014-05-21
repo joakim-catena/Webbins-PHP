@@ -328,8 +328,9 @@ class DB {
 
     /**
      *  Order by.
-     *  @param  string  $column
-     *  @param  string  $order
+     *  @param   string  $column
+     *  @param   string  $order
+     *  @return  DB
      */
     public function orderBy($column, $order) {
         $this->orderBys[] = new OrderBy($column, $order);
@@ -338,6 +339,7 @@ class DB {
 
     /**
      *  Get all order bys and return them as a string.
+     *  @return  string
      */
     private function getOrderBys() {
         $string = '';
@@ -353,11 +355,20 @@ class DB {
         return '';
     }
 
+    /**
+     *  Limit.
+     *  @param   string|int  $limit
+     *  @return  DB
+     */
     public function limit($limit) {
         $this->limits = $limit;
         return self::$self;
     }
 
+    /**
+     *  Get limit as a string.
+     *  @return  string
+     */
     private function getLimits() {
         if ($this->limits) {
             return 'Limit '.$this->limits;
@@ -366,11 +377,20 @@ class DB {
         return '';
     }
 
+    /**
+     *  Offset.
+     *  @param   string|int  $offset
+     *  @return  DB
+     */
     public function offset($offset) {
         $this->offsets = $offset;
         return self::$self;
     }
 
+    /**
+     *  Get offset as a string.
+     *  @return  string
+     */
     private function getOffsets() {
         if ($this->offsets) {
             return 'Offset '.$this->offsets;
@@ -406,14 +426,21 @@ class DB {
     }
 
     /**
-     * Insert.
+     * Insert. There are two ways when using insert. One of the way
+     * is to pass an array containing both key and value. Or you can
+     * pass two arrays, one containing keys and the other one
+     * containing values.
+     *
+     * $insert = array('Key' => 'Value');
+     *
+     * $insertKeys = array('Key');
+     * $insertValues = array('Value');
+     *
      * @param   array  $keys
      * @param   array  $values
-     * @return  bool
+     * @return  void
      */
-    public function insert($keys, $values=array()) {
-        assert(is_array($keys), 'The function needs an array.');
-
+    public function insert(Array $keys, $values=array()) {
         // runs the code below if the user has passed a second array of values.
         // Meaning the user wishes to pass keys and values separately.
         // This piece of code converts the users data to the original way
@@ -453,18 +480,32 @@ class DB {
         return self::$preparedStatement->execute();
     }
 
+    /**
+     *  Get an array with objects from a query.
+     *  @param   const  $mode=self::OBJECTS  DB::OBJECTS, DB::ARRAYS
+     *  @return  array
+     */
     public function get($mode=self::OBJECTS) {
         $this->prepare();
         self::execute();
         return self::$preparedStatement->fetchAll($mode);
     }
 
+    /**
+     *  Get first result.
+     *  @param   const  $mode=self::OBJECTS  DB::OBJECTS, DB::ARRAYS
+     *  @return  array
+     */
     public function first($mode=self::OBJECTS) {
         $this->prepare();
         self::$preparedStatement->execute();
         return self::$preparedStatement->fetch($mode);
     }
 
+    /**
+     *  Prepares a query.
+     *  @return  void
+     */
     public function prepare() {
         // Select {selects} From {tables} {joins} {wheres} {orderbys} {limit}
         $args = array(
@@ -484,6 +525,11 @@ class DB {
         self::$preparedStatement = $this->connection->prepare($query);
     }
 
+    /**
+     *  Executes a prepared statement.
+     *  @throws  Exception
+     *  @return  DB
+     */
     public static function execute() {
         self::$preparedStatement->execute();
 
