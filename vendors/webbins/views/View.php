@@ -51,7 +51,7 @@ class View {
      * @return  string
      */
     public static function json($object, $options=0, $depth=256) {
-        $json = json_encode($object, $options);
+        $json = json_encode($object, $options, $depth);
         if (json_last_error()) {
             throw new Exception(json_last_error_msg());
         }
