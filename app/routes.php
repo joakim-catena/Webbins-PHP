@@ -7,5 +7,5 @@ Router::resource('stores', 'StoresController');
 
 // contains all available routes
 Router::get('routes', function() {
-    return Webbins\View\View::render('webbins/routes');
+    return Webbins\Views\View::render('webbins/routes');
 });
