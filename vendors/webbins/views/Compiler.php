@@ -83,13 +83,16 @@ class Compiler {
      */
     private $storing;
 
+    private $cleanup;
+
     /**
      * Construct.
      */
-    public function __construct($page, $params=array(), $storing=true) {
+    public function __construct($page, $params=array(), $storing=true, $cleanup=true) {
         $this->page = $page;
         $this->params = $params;
         $this->storing = $storing;
+        $this->cleanup = $cleanup;
         $this->viewsPath = Config::get('views');
         $this->tmpViewsPath = Config::get('tmpViews');
         $this->namespaces = Config::get('namespaces');
@@ -131,7 +134,9 @@ class Compiler {
             return $this->runCompiledCode($compiledPage, $this->params);
         }
 
-        $code = $this->clean($code);
+        if ($this->cleanup) {
+            $code = $this->clean($code);
+        }
 
         return $code;
     }
@@ -194,7 +199,7 @@ class Compiler {
             // store the extends command: "W.extends('whatever')"
             $extendsCmd = $matches[0];
 
-            $compiler = new Compiler($matches[1], array(), false);
+            $compiler = new Compiler($matches[1], array(), false, false);
             $extendedCode = $compiler->compile();
             // remove the extends command from original code
             $code = str_replace($extendsCmd, '', $code);
@@ -215,7 +220,7 @@ class Compiler {
             $keys = $matches[0];
             $pages = $matches[1];
             for ($i=0; $i<count($keys); $i++) {
-                $compiler = new Compiler($pages[$i], array(), false);
+                $compiler = new Compiler($pages[$i], array(), false, false);
                 $includeCode = $compiler->compile();
                 $code = str_replace($keys[$i], $includeCode, $code);
             }
