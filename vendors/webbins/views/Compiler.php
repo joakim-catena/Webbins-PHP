@@ -83,6 +83,10 @@ class Compiler {
      */
     private $storing;
 
+    /**
+     * Used to determine if the compiler should clean up afterwards.
+     * @var  bool
+     */
     private $cleanup;
 
     /**
@@ -127,15 +131,13 @@ class Compiler {
         $code = $this->compileRenders($code);
         $code = $this->compileEvals($code);
 
+        $code = $this->clean($code);
+
         if ($this->storing) {
             $code = $this->addNamespaces($code);
 
             $compiledPage = $this->storeCompiledCode($this->page, $code);
             return $this->runCompiledCode($compiledPage, $this->params);
-        }
-
-        if ($this->cleanup) {
-            $code = $this->clean($code);
         }
 
         return $code;
@@ -277,10 +279,17 @@ class Compiler {
         return $namespace.$code;
     }
 
+    /**
+     * Clean up code.
+     * @param   string  $code
+     * @return  string
+     */
     private function clean($code) {
-        // if a render were found but had nothing to load, then remove it.
-        $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
-        return $code;
+        if ($this->cleanup) {
+            // if a render were found but had nothing to load, remove it.
+            $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
+            return $code;
+        }
     }
 
     /**
