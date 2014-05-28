@@ -477,6 +477,51 @@ class DB {
             self::$preparedStatement->bindValue($i, $value, $this->getParamType($value));
         }
 
+        self::clean();
+        return self::$preparedStatement->execute();
+    }
+
+    /**
+     * Update method.
+     * @param   array  $keys
+     * @param   array  $values
+     * @return  void
+     */
+    public function update(Array $keys, $values=array()) {
+        // runs the code below if the user has passed a second array of values.
+        // Meaning the user wishes to pass keys and values separately.
+        // This piece of code converts the users data to the original way
+        // of putting in data.
+        if (!empty($values)) {
+            assert(is_array($keys) && is_array($values), 'Both keys and values must be arrays.');
+
+            $newKey = array();
+            for ($i=0; $i<count($keys); $i++) {
+                $newKey[$keys[$i]] = $values[$i];
+            }
+            $keys = $newKey;
+        }
+
+        $c = '';
+
+        foreach ($keys as $key => $value) {
+            $c .= $key.'=?, ';
+        }
+
+        // remove last comma and space
+        $c = trim($c, ', ');
+
+        $query = 'Update '.$this->getTables().' Set '.$c.' '.$this->getWheres().';';
+
+        self::$preparedStatement = $this->connection->prepare($query);
+
+        $i = 0;
+        foreach ($keys as $key => $value) {
+            $i++;
+            self::$preparedStatement->bindValue($i, $value, $this->getParamType($value));
+        }
+
+        self::clean();
         return self::$preparedStatement->execute();
     }
 
