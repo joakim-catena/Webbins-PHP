@@ -272,7 +272,7 @@ class Compiler {
         return $namespace.$code;
     }
 
-    private function cleanup($code) {
+    private function clean($code) {
         // if a render were found but had nothing to load, then remove it.
         $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
         return $code;
