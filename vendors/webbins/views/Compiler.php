@@ -124,14 +124,14 @@ class Compiler {
         $code = $this->compileRenders($code);
         $code = $this->compileEvals($code);
 
-        $code = $this->clean($code);
-
         if ($this->storing) {
             $code = $this->addNamespaces($code);
 
             $compiledPage = $this->storeCompiledCode($this->page, $code);
             return $this->runCompiledCode($compiledPage, $this->params);
         }
+
+        $code = $this->clean($code);
 
         return $code;
     }
