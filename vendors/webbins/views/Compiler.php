@@ -124,6 +124,8 @@ class Compiler {
         $code = $this->compileRenders($code);
         $code = $this->compileEvals($code);
 
+        $code = $this->clean($code);
+
         if ($this->storing) {
             $code = $this->addNamespaces($code);
 
@@ -268,6 +270,11 @@ class Compiler {
         $namespace = '<?php '.$tmp.'?>';
 
         return $namespace.$code;
+    }
+
+    private function clean($code) {
+        // if a render were found but had nothing to load, then remove it.
+        $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
     }
 
     /**
