@@ -537,6 +537,25 @@ class DB {
             throw new Exception(self::$preparedStatement->errorInfo()[2]);
         }
 
+        self::clean();
+
         return self::$self;
+    }
+
+    /**
+     * Resets all values to default.
+     * @return  void
+     */
+    private static function clean() {
+        $self = self::$self;
+
+        $self::$tables  = array();
+        $self->selects  = array();
+        $self->joins    = array();
+        $self->ons      = array();
+        $self->wheres   = array();
+        $self->orderBys = array();
+        $self->limits   = 0;
+        $self->offsets  = '';
     }
 }
