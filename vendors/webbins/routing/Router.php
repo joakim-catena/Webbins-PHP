@@ -2,7 +2,7 @@
 
 use Exception;
 use Closure;
-use Webbins\View\View;
+use Webbins\Views\View;
 
 require('Filter.php');
 require('Route.php');
