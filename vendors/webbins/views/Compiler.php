@@ -288,8 +288,8 @@ class Compiler {
         if ($this->cleanup) {
             // if a render were found but had nothing to load, remove it.
             $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
-            return $code;
         }
+        return $code;
     }
 
     /**
