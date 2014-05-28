@@ -417,7 +417,7 @@ class Router {
      * @return  void
      */
     public static function run() {
-        $pathFound = false;
+        $found = false;
         $uri = isset($_GET['uri']) ? $_GET['uri'] : '';
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -428,10 +428,13 @@ class Router {
                 if ($response = self::dispatch($route)) {
                     return $response;
                 }
+                $found = true;
             }
         }
 
-        return View::abort(404, 'Path was not found.');
+        if (!$found) {
+            return View::abort(404, 'Path was not found.');
+        }
     }
 
     /**
