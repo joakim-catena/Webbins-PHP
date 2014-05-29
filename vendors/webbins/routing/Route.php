@@ -234,10 +234,14 @@ class Route {
      * @return  bool
      */
     public function matchPath($uri, $method) {
+        $path = str_replace('/', '\/', $this->getPrefix()).$this->getPattern();
+        // remove trailing slash
+        $path = rtrim($path, '\/');
+
         // if it's a match, then remove the first index (preg_match returns
         // the whole matching string as first index), set the parameters
         // and return true.
-        if (preg_match('/^'.str_replace('/', '\/', $this->getPrefix()).$this->getPattern().'$/', $uri, $matches) && $this->getMethod() == strtoupper($method)) {
+        if (preg_match('/^'.$path.'$/', $uri, $matches) && $this->getMethod() == strtoupper($method)) {
             array_shift($matches);
             $this->setParams($matches);
             return true;
