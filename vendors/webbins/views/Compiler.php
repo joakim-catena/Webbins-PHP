@@ -289,7 +289,9 @@ class Compiler {
         if ($this->cleanup) {
             // if a render were found but had nothing to load, remove it.
             $code = preg_replace('/[^\\\\]'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
-            $code = preg_replace('/\\\\W\.[a-z]+', '', $code);
+            // clean up escaped code.
+            $code = preg_replace('/\\\\(W\.[a-z]+.+?)/', '$1', $code);
+            $code = preg_replace('/\\\\(\{\{)/', '$1', $code);
         }
         return $code;
     }
