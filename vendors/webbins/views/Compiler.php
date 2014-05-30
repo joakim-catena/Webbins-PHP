@@ -205,7 +205,8 @@ class Compiler {
             $extendedCode = $compiler->compile();
 
             // remove the extends command from original code (only matches once)
-            $code = preg_replace('/'.addslashes($extendsCmd).'/', '', $code, 1);
+            $extendsCmd = preg_quote($extendsCmd, '/');
+            $code = preg_replace('/'.$extendsCmd.'/', '', $code, 1);
 
             return $extendedCode.$code;
         }
