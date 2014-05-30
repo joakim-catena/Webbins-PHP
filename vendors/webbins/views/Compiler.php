@@ -197,14 +197,15 @@ class Compiler {
      * @return  string
      */
     private function compileExtends($code) {
-        if (preg_match('/'.$this->tags['extends'].'\([\'|\"](.+)[\'|\"]\)/', $code, $matches)) {
+        if (preg_match('/[^\\\\]?'.$this->tags['extends'].'\([\'|\"](.+)[\'|\"]\)/', $code, $matches)) {
             // store the extends command: "W.extends('whatever')"
             $extendsCmd = $matches[0];
 
             $compiler = new Compiler($matches[1], array(), false, false);
             $extendedCode = $compiler->compile();
-            // remove the extends command from original code
-            $code = str_replace($extendsCmd, '', $code);
+
+            // remove the extends command from original code (only matches once)
+            $code = preg_replace('/'.addslashes($extendsCmd).'/', '', $code, 1);
 
             return $extendedCode.$code;
         }
@@ -218,7 +219,7 @@ class Compiler {
      *  @return  string
      */
     private function compileIncludes($code) {
-        if (preg_match_all('/'.$this->tags['include'].'\([\'|\"](.+?)[\'|\"]\)/', $code, $matches)) {
+        if (preg_match_all('/[^\\\\]'.$this->tags['include'].'\([\'|\"](.+?)[\'|\"]\)/', $code, $matches)) {
             $keys = $matches[0];
             $pages = $matches[1];
             for ($i=0; $i<count($keys); $i++) {
@@ -237,7 +238,7 @@ class Compiler {
      *  @return  string
      */
     private function compileRenders($code) {
-        if (preg_match_all('/'.$this->tags['block'].'\([\'|\"](.+?)[\'|\"]\)(.+?)'.$this->tags['end'].'/s', $code, $matches)) {
+        if (preg_match_all('/[^\\\\]'.$this->tags['block'].'\([\'|\"](.+?)[\'|\"]\)(.+?)[^\\\\]'.$this->tags['end'].'/s', $code, $matches)) {
             $default = $matches[0];
             $keys = $matches[1];
             $values = $matches[2];
@@ -256,7 +257,7 @@ class Compiler {
      *  @return  string
      */
     private function compileEvals($code) {
-        $code = preg_replace('/'.$this->tags['open'].'\s?(.+?)\s?'.$this->tags['close'].'/s', '<?php $1 ?>', $code);
+        $code = preg_replace('/[^\\\\]'.$this->tags['open'].'\s?(.+?)\s?'.$this->tags['close'].'/s', '<?php $1 ?>', $code);
         return $code;
     }
 
@@ -287,7 +288,8 @@ class Compiler {
     private function clean($code) {
         if ($this->cleanup) {
             // if a render were found but had nothing to load, remove it.
-            $code = preg_replace('/'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
+            $code = preg_replace('/[^\\\\]'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
+            $code = preg_replace('/\\\\W\.[a-z]+', '', $code);
         }
         return $code;
     }
