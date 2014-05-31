@@ -1,8 +1,7 @@
 <?php
 
 $config = [
-    'host'      => 'localhost',
-    'path'      => '1DV42E',
+    'path'      => 'Webbins-Framework',
     'views'     => 'app/views',
     'tmpViews'  => 'app/tmp/views',
     'logs' => [
@@ -18,8 +17,8 @@ $config = [
         'charset' => 'utf8'
     ],
     'autoloading' => [
-        'cacheFiles'    => false,
-        'path'          => 'autoloader.cache',
+        'cacheFiles'    => true,
+        'path'          => 'app/tmp/autoloader.cache',
         'resources'     => ['app/'],
         'excludes'      => ['']
     ],
