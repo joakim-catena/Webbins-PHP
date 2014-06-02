@@ -1,9 +1,0 @@
-W.extends('client/master')
-
-W.block('content')
-  <a href="stores/create">Skapa en ny</a>
-  {{ foreach ($stores as $store) {
-          W.include("client/stores/store")
-      }
-  }}
-W.end
