@@ -1,7 +1,7 @@
 <?php
 
 $config = [
-    'path'      => 'Webbins-Framework',
+    'path'      => 'Webbins-PHP',
     'views'     => 'app/views',
     'tmpViews'  => 'app/tmp/views',
     'logs' => [
