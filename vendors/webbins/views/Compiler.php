@@ -8,8 +8,8 @@ class Compiler {
      * Tags used in templating.
      */
     private $tags = array(
-        'open'       => '{{',
-        'close'      => '}}',
+        'open'       => '\{\{',
+        'close'      => '\}\}',
         'end'        => 'W.end',
         'extends'    => 'W.extends',
         'include'    => 'W.include',
@@ -258,7 +258,15 @@ class Compiler {
      *  @return  string
      */
     private function compileEvals($code) {
-        $code = preg_replace('/[^\\\\]'.$this->tags['open'].'\s?(.+?)\s?'.$this->tags['close'].'/s', '<?php $1 ?>', $code);
+        if (preg_match_all('/[^\\\\]'.$this->tags['open'].'\s?(.+?)\s?'.$this->tags['close'].'/s', $code, $matches)) {
+            $keys = $matches[0];
+            $values = $matches[1];
+            for ($i=0; $i<count($keys); $i++) {
+                $key = preg_quote(substr($keys[$i], 1));
+                $value = trim($values[$i]);
+                $code = preg_replace('/'.$key.'/s', '<?php '.$value.' ?>', $code, 1);
+            }
+        }
         return $code;
     }
 
@@ -292,7 +300,7 @@ class Compiler {
             $code = preg_replace('/[^\\\\]'.$this->tags['render'].'\([\'|\"](.+?)[\'|\"]\)/', '', $code);
             // clean up escaped code.
             $code = preg_replace('/\\\\(W\.[a-z]+.+?)/', '$1', $code);
-            $code = preg_replace('/\\\\(\{\{)/', '$1', $code);
+            //$code = preg_replace('/\\\\(\{\{)/', '$1', $code);
         }
         return $code;
     }
