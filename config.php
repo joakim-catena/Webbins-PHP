@@ -8,16 +8,16 @@ $config = [
         'error' => 'logs/error.log'
     ],
     'database' => [
-        'connect' => true,
+        'connect' => false,
         'host'    => 'localhost',
-        'user'    => 'robin',
-        'pass'    => 'robin',
-        'db'      => 'robin_rabattrea',
+        'user'    => '',
+        'pass'    => '',
+        'db'      => '',
         'driver'  => 'mysql',
         'charset' => 'utf8'
     ],
     'autoloading' => [
-        'cacheFiles'    => true,
+        'cacheFiles'    => false,
         'path'          => 'app/tmp/autoloader.cache',
         'resources'     => ['app/'],
         'excludes'      => ['']
