@@ -71,7 +71,6 @@ class Route {
      */
     private function setPattern($path) {
         $path = trim($path, '/');
-        $path = preg_replace('/\//', '\/', $path);
 
         $pattern = array(
             '/:int|:id/',
