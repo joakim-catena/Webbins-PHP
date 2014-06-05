@@ -59,6 +59,15 @@ class View {
     }
 
     /**
+     * Say returns a message.
+     * @param   string  $message
+     * @return  string
+     */
+    public static function say($message) {
+        return $message;
+    }
+
+    /**
      *  Converts an object to a string by using
      *  output buffering strategy.
      *  @param   mixed  $object
