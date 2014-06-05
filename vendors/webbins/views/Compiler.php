@@ -262,9 +262,9 @@ class Compiler {
             $keys = $matches[0];
             $values = $matches[1];
             for ($i=0; $i<count($keys); $i++) {
-                $key = preg_quote(substr($keys[$i], 1));
+                $key = substr($keys[$i], 1);
                 $value = trim($values[$i]);
-                $code = preg_replace('/'.$key.'/s', '<?php '.$value.' ?>', $code, 1);
+                $code = preg_replace('/'.preg_quote($key, '/').'/s', '<?php '.$value.' ?>', $code, 1);
             }
         }
         return $code;
