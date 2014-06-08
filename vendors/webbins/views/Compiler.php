@@ -97,9 +97,9 @@ class Compiler {
         $this->params = $params;
         $this->storing = $storing;
         $this->cleanup = $cleanup;
-        $this->viewsPath = Config::get('views');
-        $this->tmpViewsPath = Config::get('tmpViews');
-        $this->namespaces = Config::get('namespaces');
+        $this->viewsPath = Config::get('views:path');
+        $this->tmpViewsPath = Config::get('views:tmpPath');
+        $this->namespaces = Config::get('views:namespaces');
         $this->basePath = Config::get('path');
     }
 
