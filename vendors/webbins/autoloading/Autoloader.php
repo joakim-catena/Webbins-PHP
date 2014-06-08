@@ -28,34 +28,33 @@ class Autoloader {
     /**
      * Construct.
      *
-     * Check if a cache file already exists. If
-     * not, then create an empty file, scan through all
-     * directories and cache the files.
+     * Check if a cache file already exists. If not, then
+     * create an empty file, scan through all directories
+     * and cache the files.
      *
-     * Try to load all files and include them in the
-     * project.
+     * Try to load all files and include them in the project.
      * @param  string   $path
      * @param  array    $resources
      * @param  array    $excludes
-     * @param  boolean  $cacheFiles
+     * @param  boolean  $cache
      */
-    public function __construct($path, $resources, $excludes=array(), $cacheFiles=true) {
+    public function __construct($path, $resources, $excludes=array(), $cache=false) {
         $this->path = $path;
         $this->resources = $resources;
         $this->excludes = $excludes;
 
-        // if the user wishes not to load from cache,
-        // then scan and execute all files.
-        if (!$cacheFiles) {
+        // if the user wishes not to load from cache, then
+        // scan and execute all files.
+        if (!$cache) {
             $files = $this->scanFiles();
             $this->executeFiles($files);
             return true;
         }
 
-        // if the file exists, then load all files
-        // and execute them. If not, create the cache
-        // file, scan for all files, execute and then
-        // save to cache.
+        // if the file exists, then load all files and
+        // execute them. If not, create the cache file,
+        // scan for all files, execute and then save
+        // to cache.
         if ($this->fileExists()) {
             $files = $this->loadFiles();
             $this->executeFiles($files);
