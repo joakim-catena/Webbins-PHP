@@ -239,10 +239,13 @@ class Route {
         $path = rtrim($path, '/');
         $uri = rtrim($uri, '/');
 
+        // escape slashes
+        $path = str_replace('/', '\/', $path);
+
         // if it's a match, then remove the first index (preg_match returns
         // the whole matching string as first index), set the parameters
         // and return true.
-        if (preg_match('/^'.preg_quote($path, '/').'$/i', $uri, $matches) && $this->getMethod() == strtoupper($method)) {
+        if (preg_match('/^'.$path.'$/i', $uri, $matches) && $this->getMethod() == strtoupper($method)) {
             array_shift($matches);
             $this->setParams($matches);
             return true;
