@@ -13,7 +13,7 @@ require('vendors/webbins/database/DB.php');
 require('vendors/webbins/sessions/Session.php');
 require('vendors/webbins/cookies/Cookie.php');
 
-$config = new Config();
+new Config($config);
 
 new Redirecting\Redirect();
 
