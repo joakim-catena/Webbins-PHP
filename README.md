@@ -2,7 +2,7 @@
 
 <p>Webbins PHP is a REST- and MVC inspired framework written in PHP.</p>
 
-<p>You can visit our webpage at <a href="http://www.webbins.se/framework">webbins.se/framework</a> for more information and documentation.</p>
+<p>You can visit our webpage at <a href="http://www.webbins.se/php">webbins.se/php</a> for more information and documentation.</p>
 
 <h2>License</h2>
 
