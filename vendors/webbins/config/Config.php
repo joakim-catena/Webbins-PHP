@@ -1,8 +1,6 @@
 <?php namespace Webbins\Config;
 
-require('config.php');
-
-use \Exception;
+use Exception;
 
 class Config {
     private static $config;
@@ -10,16 +8,16 @@ class Config {
     /**
      * Construct.
      * Fetches all configs and stores them.
+     * @param  array  $config
      */
-    public function __construct() {
-        global $config;
+    public function __construct(Array $config) {
         self::$config = $config;
     }
 
     /**
      * Get function which lets the user fetch a config.
      * e.g: Config::get("path");
-     * 
+     *
      * The function also supports arrays by separating
      * with a comma.
      * e.g: Config::get("database:user");

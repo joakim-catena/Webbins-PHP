@@ -4,6 +4,7 @@ use Webbins\Routing\Router;
 try {
     session_start();
 
+    require('config.php');
     require('vendors/webbins/bootstrap.php');
 
     /* Assert options */
