@@ -544,6 +544,7 @@ class DB {
     public function first($mode=self::OBJECTS) {
         $this->prepare();
         self::$preparedStatement->execute();
+        self::clean();
         return self::$preparedStatement->fetch($mode);
     }
 
