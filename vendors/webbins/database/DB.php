@@ -27,7 +27,7 @@ class DB {
      * Stores the PDO connection.
      * @var  PDO object
      */
-    private $connection;
+    private static $connection;
 
     /**
      * Stores all tables.
@@ -100,7 +100,7 @@ class DB {
         if ($connect) {
             $dsn = $driver.':dbname='.$database.';host='.$host;
 
-            $this->connection = new PDO($dsn, $user, $password);
+            self::$connection = new PDO($dsn, $user, $password);
         }
     }
 
@@ -438,7 +438,7 @@ class DB {
      *
      * @param   array  $keys
      * @param   array  $values
-     * @return  void
+     * @return  bool
      */
     public function insert(Array $keys, $values=array()) {
         // runs the code below if the user has passed a second array of values.
@@ -469,7 +469,7 @@ class DB {
 
         $query = 'Insert Into '.$this->getTables().' ('.$c.') Values ('.$v.');';
 
-        self::$preparedStatement = $this->connection->prepare($query);
+        self::$preparedStatement = self::$connection->prepare($query);
 
         $i = 0;
         foreach ($keys as $key => $value) {
@@ -513,7 +513,7 @@ class DB {
 
         $query = 'Update '.$this->getTables().' Set '.$c.' '.$this->getWheres().';';
 
-        self::$preparedStatement = $this->connection->prepare($query);
+        self::$preparedStatement = self::$connection->prepare($query);
 
         $i = 0;
         foreach ($keys as $key => $value) {
@@ -523,6 +523,14 @@ class DB {
 
         self::clean();
         return self::$preparedStatement->execute();
+    }
+
+    /**
+     * Returns the last inserted id.
+     * @return  int
+     */
+    public static function lastInsertedId() {
+        return self::$connection->lastInsertId();
     }
 
     /**
@@ -568,7 +576,7 @@ class DB {
 
         $query = preg_replace('/\s+/', ' ', trim(vsprintf($query, $args)));
 
-        self::$preparedStatement = $this->connection->prepare($query);
+        self::$preparedStatement = self::$connection->prepare($query);
     }
 
     /**
