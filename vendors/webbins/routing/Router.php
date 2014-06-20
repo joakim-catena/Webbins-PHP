@@ -419,7 +419,11 @@ class Router {
     public static function run() {
         $found = false;
         $uri = isset($_GET['uri']) ? $_GET['uri'] : '';
-        $method = $_SERVER['REQUEST_METHOD'];
+        if (isset($_POST['_method'])) {
+            $method = $_POST['_method'];
+        } else {
+            $method = $_SERVER['REQUEST_METHOD'];
+        }
 
         // loop through all routes and check if the current path
         // matches the routes. If it does, then execute it.
