@@ -266,7 +266,7 @@ class DB {
      */
     public function where($column, $compareOperator='', $value='') {
         if (empty($compareOperator)) {
-            preg_match('/^(.+?)(=|>|<|>=|<=|<>|!=|!<|!>)(.+)$/', $column, $matches);
+            preg_match('/^(.+?)(=|>|<|>=|<=|<>|!=|!<|!>|like)(.+)$/i', $column, $matches);
             $column = $matches[1];
             $compareOperator = $matches[2];
             $value = $matches[3];
@@ -315,7 +315,7 @@ class DB {
                 $string .= $where->getOperator().' ';
             }
             $string .= $where->getColumn();
-            $string .= $where->getCompareOperator();
+            $string .= ' '.$where->getCompareOperator().' ';
             $string .= $where->getValue().' ';
         }
 
