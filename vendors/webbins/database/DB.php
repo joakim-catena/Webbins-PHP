@@ -529,7 +529,7 @@ class DB {
      * Returns the last inserted id.
      * @return  int
      */
-    public static function lastInsertedId() {
+    public static function lastInsertedID() {
         return self::$connection->lastInsertId();
     }
 
