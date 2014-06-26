@@ -27,7 +27,7 @@ class Where {
     }
 
     private function setCompareOperator($operator) {
-        if (!preg_match('/(=|>|<|>=|<=|<>|!=|!<|!>)/i', $operator)) {
+        if (!preg_match('/(=|>|<|>=|<=|<>|!=|!<|!>|like)/i', $operator)) {
             throw new Exception('The comparison operator isn\'t valid.');
         }
         $this->compareOperator = $operator;   

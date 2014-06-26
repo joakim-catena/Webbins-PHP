@@ -23,12 +23,12 @@ class View {
     /**
      * Build takes the name of the view file which
      * is to be opened.
-     * @param   string  $page
+     * @param   string  $pageName
      * @param   array   $params
      * @return  void
      */
-    public static function render($page, $params=array()) {
-        $compiler = new Compiler($page, $params);
+    public static function render($pageName, $params=array()) {
+        $compiler = new Compiler($pageName, $params);
         return $compiler->compile();
     }
 

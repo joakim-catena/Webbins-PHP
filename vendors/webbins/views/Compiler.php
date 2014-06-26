@@ -312,6 +312,6 @@ class Compiler {
      *  @return  string
      */
     private function absolutePaths($code) {
-        return preg_replace('/(href|src)=([\"|\'])(?!http:\/\/|https:\/\/|\/\/)(.+?)([\"|\'])/', '$1=$2/'.$this->basePath.'/$3$4', $code);
+        return preg_replace('/(href|src|action)=([\"|\'])(?!http:\/\/|https:\/\/|\/\/)(.+?)([\"|\'])/', '$1=$2/'.$this->basePath.'/$3$4', $code);
     }
 }
