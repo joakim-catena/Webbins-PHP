@@ -1,6 +1,6 @@
 <?php namespace Webbins\Database;
 
-use \Exception;
+use Exception;
 
 class Where {
     const AND_OPERATOR = '&&';
@@ -9,7 +9,7 @@ class Where {
     private $column;
     private $compareOperator;
     private $value;
-    private $operator = AND_OPERATOR;
+    private $operator = self::AND_OPERATOR;
 
     public function __construct($column, $compareOperator, $value) {
         $this->setColumn($column);

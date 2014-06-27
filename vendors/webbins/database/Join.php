@@ -1,6 +1,6 @@
 <?php namespace Webbins\Database;
 
-use \Exception;
+use Exception;
 
 class Join {
     const JOIN = 'Join';
