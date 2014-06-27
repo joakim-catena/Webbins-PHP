@@ -321,6 +321,8 @@ class DB {
             $string .= $where->getValue().' ';
         }
 
+        $string = ltrim($string, '&&');
+
         if ($string) {
             return trim('Where '.$string);
         }

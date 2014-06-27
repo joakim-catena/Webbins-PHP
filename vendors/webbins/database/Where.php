@@ -9,7 +9,7 @@ class Where {
     private $column;
     private $compareOperator;
     private $value;
-    private $operator;
+    private $operator = AND_OPERATOR;
 
     public function __construct($column, $compareOperator, $value) {
         $this->setColumn($column);
@@ -30,7 +30,7 @@ class Where {
         if (!preg_match('/(=|>|<|>=|<=|<>|!=|!<|!>|like)/i', $operator)) {
             throw new Exception('The comparison operator isn\'t valid.');
         }
-        $this->compareOperator = $operator;   
+        $this->compareOperator = $operator;
     }
 
     public function getCompareOperator() {
