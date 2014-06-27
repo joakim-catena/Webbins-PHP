@@ -81,6 +81,8 @@ class DB {
 
     private $preparedStatements = array();
 
+    private static $lastQuery = '';
+
     /**
      * Construct. Stores an instance of itself so static
      * methods can use it.
@@ -594,6 +596,14 @@ class DB {
         self::clean();
 
         return self::$self;
+    }
+
+    /**
+     * Returns the last query stored in preparedStatement.
+     * @return  string
+     */
+    public static function debugQuery() {
+        return self::$preparedStatement->queryString;
     }
 
     /**
