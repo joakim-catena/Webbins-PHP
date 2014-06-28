@@ -5,10 +5,17 @@ use Webbins\Sessions\Session;
 
 class Redirect {
     /**
-     * Construct.
+     * Stores the base path to the application.
+     * @var  string
      */
-    public function __construct() {
+    private static $basePath;
 
+    /**
+     * Construct.
+     * @param  string  $path
+     */
+    public function __construct($path) {
+        self::$basePath = $path;
     }
 
     /**
@@ -22,6 +29,8 @@ class Redirect {
         assert(!empty($path), 'Path can\'t be empty');
 
         self::storeValues($values);
+
+        $path = self::absolutePath($path);
 
         header('Location: '.$path);
         exit();
@@ -38,5 +47,14 @@ class Redirect {
                 Session::put($key, $value);
             }
         }
+    }
+
+    /**
+     * Corrects the path to use a absolute path.
+     * @param   string  $path
+     * @return  string
+     */
+    private static function absolutePath($path) {
+        return str_replace('//', '/', '/'.self::$basePath.'/'.$path);
     }
 }
