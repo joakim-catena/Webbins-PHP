@@ -12,10 +12,11 @@ require('vendors/webbins/routing/Router.php');
 require('vendors/webbins/database/DB.php');
 require('vendors/webbins/sessions/Session.php');
 require('vendors/webbins/cookies/Cookie.php');
+require('vendors/webbins/forms/Form.php');
 
 new Config($config);
 
-new Redirecting\Redirect();
+new Redirecting\Redirect(Config::get('path'));
 
 new Routing\Router();
 
@@ -36,3 +37,5 @@ new Autoloading\Autoloader(
     Config::get('autoloading:excludes'),
     Config::get('autoloading:cache')
 );
+
+new Forms\Form();
