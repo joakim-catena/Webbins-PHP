@@ -13,6 +13,7 @@ require('vendors/webbins/database/DB.php');
 require('vendors/webbins/sessions/Session.php');
 require('vendors/webbins/cookies/Cookie.php');
 require('vendors/webbins/forms/Form.php');
+require('vendors/webbins/validation/Validate.php');
 
 new Config($config);
 
@@ -21,6 +22,8 @@ new Redirecting\Redirect(Config::get('path'));
 new Routing\Router();
 
 new Views\View();
+
+new Validation\Validate();
 
 new Database\DB(
     Config::get('database:driver'),
