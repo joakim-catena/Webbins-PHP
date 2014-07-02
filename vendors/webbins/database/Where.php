@@ -38,11 +38,7 @@ class Where {
     }
 
     private function setValue($value) {
-        if (is_string($value)) {
-            $this->value = '"'.$value.'"';
-        } else {
-            $this->value = $value;
-        }
+        $this->value = $value;
     }
 
     public function getValue() {

@@ -318,7 +318,7 @@ class DB {
             }
             $string .= $where->getColumn();
             $string .= ' '.$where->getCompareOperator().' ';
-            $string .= $where->getValue().' ';
+            $string .= self::$connection->quote($where->getValue()).' ';
         }
 
         $string = ltrim($string, '&&');
@@ -489,7 +489,7 @@ class DB {
      * Update method.
      * @param   array  $keys
      * @param   array  $values
-     * @return  void
+     * @return  bool
      */
     public function update(Array $keys, $values=array()) {
         // runs the code below if the user has passed a second array of values.
@@ -524,6 +524,27 @@ class DB {
             $i++;
             self::$preparedStatement->bindValue($i, $value, $this->getParamType($value));
         }
+
+        self::clean();
+        return self::$preparedStatement->execute();
+    }
+
+    /**
+     * Delete method. Before a delete can take action the user must have called
+     * where() before. This is to reduce the risk of removing all posts by
+     * mistake. You can force to remove all posts inside a table by passing
+     * "true".
+     * @param   bool  $force
+     * @return  bool
+     */
+    public function delete($force=false) {
+        if ($force) {
+            $query = 'Delete From '.$this->getTables().';';
+        } else {
+            $query = 'Delete From '.$this->getTables().' '.$this->getWheres().';';
+        }
+
+        self::$preparedStatement = self::$connection->prepare($query);
 
         self::clean();
         return self::$preparedStatement->execute();
