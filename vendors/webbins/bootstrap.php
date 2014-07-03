@@ -14,6 +14,7 @@ require('vendors/webbins/sessions/Session.php');
 require('vendors/webbins/cookies/Cookie.php');
 require('vendors/webbins/forms/Form.php');
 require('vendors/webbins/validation/Validate.php');
+require('vendors/webbins/mailing/Mail.php');
 
 new Config($config);
 
@@ -25,12 +26,21 @@ new Views\View();
 
 new Validation\Validate();
 
+new Mailing\Mail(
+    Config::get('mail:host'),
+    Config::get('mail:port'),
+    Config::get('mail:sender'),
+    Config::get('mail:alias'),
+    Config::get('mail:username'),
+    Config::get('mail:password')
+);
+
 new Database\DB(
     Config::get('database:driver'),
     Config::get('database:host'),
     Config::get('database:db'),
-    Config::get('database:user'),
-    Config::get('database:pass'),
+    Config::get('database:username'),
+    Config::get('database:password'),
     Config::get('database:connect')
 );
 
