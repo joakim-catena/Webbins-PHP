@@ -7,6 +7,7 @@ use PDOException;
 require('Join.php');
 require('Where.php');
 require('OrderBy.php');
+require('GroupBy.php');
 
 class DB {
     const ARRAYS = PDO::FETCH_ASSOC;
@@ -64,6 +65,12 @@ class DB {
      * @var  array
      */
     private $orderBys = array();
+
+    /**
+     * Stores all group bys.
+     * @var  array
+     */
+    private $groupBys = array();
 
     /**
      * Stores the limit value.
@@ -403,6 +410,29 @@ class DB {
         return '';
     }
 
+    public function groupBy($column) {
+        $this->groupBys[] = new GroupBy($column);
+        return self::$self;
+    }
+
+    /**
+     *  Get all group bys and return them as a string.
+     *  @return  string
+     */
+    private function getGroupBys() {
+        $string = '';
+
+        foreach ($this->groupBys as $groupBy) {
+            $string .= $groupBy->getColumn().', ';
+        }
+
+        if ($string) {
+            return trim('Group by '.$string, ', ');
+        }
+
+        return '';
+    }
+
     public static function raw($query) {
 
     }
@@ -592,12 +622,13 @@ class DB {
             $this->getTables(),
             $this->getJoins(),
             $this->getWheres(),
+            $this->getGroupBys(),
             $this->getOrderBys(),
             $this->getLimits(),
             $this->getOffsets()
         );
 
-        $query = 'Select %s From %s %s %s %s %s %s';
+        $query = 'Select %s From %s %s %s %s %s %s %s';
 
         $query = preg_replace('/\s+/', ' ', trim(vsprintf($query, $args)));
 
@@ -642,6 +673,7 @@ class DB {
         $self->ons      = array();
         $self->wheres   = array();
         $self->orderBys = array();
+        $self->groupBys = array();
         $self->limits   = 0;
         $self->offsets  = '';
     }
