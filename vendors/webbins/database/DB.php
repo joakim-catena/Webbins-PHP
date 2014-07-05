@@ -437,7 +437,7 @@ class DB {
      * Raw lets the user run any query. This must be used with caution
      * since the framework won't escape anything automagically.
      * @param   string  $query
-     * @return
+     * @return  array
      */
     public static function raw($query) {
         if (!self::$connect) {
@@ -446,6 +446,7 @@ class DB {
 
         self::$preparedStatement = self::$connection->prepare($query);
         self::execute();
+        return self::$preparedStatement->fetchAll();
     }
 
     /**
