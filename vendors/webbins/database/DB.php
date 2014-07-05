@@ -433,8 +433,19 @@ class DB {
         return '';
     }
 
+    /**
+     * Raw lets the user run any query. This must be used with caution
+     * since the framework won't escape anything automagically.
+     * @param   string  $query
+     * @return
+     */
     public static function raw($query) {
+        if (!self::$connect) {
+            throw new Exception('The database connection is turned off. Switch it on in the config file.');
+        }
 
+        self::$preparedStatement = self::$connection->prepare($query);
+        self::execute();
     }
 
     /**
