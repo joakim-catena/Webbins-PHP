@@ -59,12 +59,21 @@ class View {
     }
 
     /**
-     * Say returns a message.
+     * Text returns a message.
+     * @param   string  $message
+     * @return  string
+     */
+    public static function text($message) {
+        return $message;
+    }
+
+    /**
+     * Say is an alias for text.
      * @param   string  $message
      * @return  string
      */
     public static function say($message) {
-        return $message;
+        return self::text($message);
     }
 
     /**
