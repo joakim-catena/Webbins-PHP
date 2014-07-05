@@ -152,7 +152,7 @@ class Compiler {
         if (!$code = file_get_contents($url)) {
             throw new Exception('Couldn\'t open '.$url);
         }
-        $code = $this->absolutePaths($code);
+
         return $code;
     }
 
@@ -188,7 +188,11 @@ class Compiler {
         }
         ob_start();
         require($this->tmpViewsPath.'/'.$page);
-        return ob_get_clean();
+        $data = ob_get_clean();
+        
+        // corrects all paths
+        $data = $this->absolutePaths($data);
+        return $data;
     }
 
     /**
