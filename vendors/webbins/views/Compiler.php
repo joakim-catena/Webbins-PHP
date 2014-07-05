@@ -189,7 +189,7 @@ class Compiler {
         ob_start();
         require($this->tmpViewsPath.'/'.$page);
         $data = ob_get_clean();
-        
+
         // corrects all paths
         $data = $this->absolutePaths($data);
         return $data;
