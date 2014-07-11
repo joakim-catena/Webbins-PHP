@@ -101,13 +101,13 @@ class DB {
      * @param  string  $user
      * @param  string  $password
      */
-    public function __construct($driver, $host, $database, $user, $password, $connect=true) {
+    public function __construct($driver, $host, $database, $user, $password, $charset, $connect=true) {
         self::$self = $this;
 
         self::$connect = $connect;
 
         if ($connect) {
-            $dsn = $driver.':dbname='.$database.';host='.$host;
+            $dsn = $driver.':dbname='.$database.';host='.$host.';charset='.$charset;
 
             self::$connection = new PDO($dsn, $user, $password);
         }

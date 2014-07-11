@@ -41,6 +41,7 @@ new Database\DB(
     Config::get('database:db'),
     Config::get('database:username'),
     Config::get('database:password'),
+    Config::get('database:charset'),
     Config::get('database:connect')
 );
 
