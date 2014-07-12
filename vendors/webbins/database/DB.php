@@ -226,7 +226,7 @@ class DB {
         foreach ($this->joins as $join) {
             $string .= $join->getType().' '.$join->getTable().' ';
             if ($join->getOn()) {
-                $string .= $join->getOn().' ';
+                $string .= 'On '.$join->getOn().' ';
             }
         }
 
