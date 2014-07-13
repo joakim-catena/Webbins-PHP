@@ -439,14 +439,14 @@ class DB {
      * @param   string  $query
      * @return  array
      */
-    public static function raw($query) {
+    public static function raw($query, $mode=self::OBJECTS) {
         if (!self::$connect) {
             throw new Exception('The database connection is turned off. Switch it on in the config file.');
         }
 
         self::$preparedStatement = self::$connection->prepare($query);
         self::execute();
-        return self::$preparedStatement->fetchAll();
+        return self::$preparedStatement->fetchAll($mode);
     }
 
     /**
