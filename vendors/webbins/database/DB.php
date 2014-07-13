@@ -673,6 +673,14 @@ class DB {
     }
 
     /**
+     * Returns an escaped string.
+     * @return  string
+     */
+    public static function escape($string) {
+        return self::$connection->quote($string);
+    }
+
+    /**
      * Resets all values to default.
      * @return  void
      */
