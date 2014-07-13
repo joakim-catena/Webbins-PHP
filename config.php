@@ -7,10 +7,10 @@
 $config = [
     /**
      * The path parameter should contain the path of your project on the web server.
-     * If the framework is reachable from root, then leave the string empty.
+     * If the framework is reachable from root, then leave a slash (/).
      * @var  string
      */
-    'path'      => 'Webbins-PHP',
+    'path'      => '/Webbins-PHP',
 
     /**
      * Database array. The database class is built around the PDO extension. You can
