@@ -55,6 +55,6 @@ class Redirect {
      * @return  string
      */
     private static function absolutePath($path) {
-        return str_replace('//', '/', '/'.self::$basePath.'/'.$path);
+        return str_replace('//', '/', self::$basePath.'/'.$path);
     }
 }
