@@ -7,6 +7,7 @@ use PDOException;
 require('Join.php');
 require('Where.php');
 require('OrderBy.php');
+require('GroupBy.php');
 
 class DB {
     const ARRAYS = PDO::FETCH_ASSOC;
@@ -66,6 +67,12 @@ class DB {
     private $orderBys = array();
 
     /**
+     * Stores all group bys.
+     * @var  array
+     */
+    private $groupBys = array();
+
+    /**
      * Stores the limit value.
      * @var  int
      */
@@ -81,6 +88,8 @@ class DB {
 
     private $preparedStatements = array();
 
+    private static $lastQuery = '';
+
     /**
      * Construct. Stores an instance of itself so static
      * methods can use it.
@@ -92,13 +101,13 @@ class DB {
      * @param  string  $user
      * @param  string  $password
      */
-    public function __construct($driver, $host, $database, $user, $password, $connect=true) {
+    public function __construct($driver, $host, $database, $user, $password, $charset, $connect=true) {
         self::$self = $this;
 
         self::$connect = $connect;
 
         if ($connect) {
-            $dsn = $driver.':dbname='.$database.';host='.$host;
+            $dsn = $driver.':dbname='.$database.';host='.$host.';charset='.$charset;
 
             self::$connection = new PDO($dsn, $user, $password);
         }
@@ -217,7 +226,7 @@ class DB {
         foreach ($this->joins as $join) {
             $string .= $join->getType().' '.$join->getTable().' ';
             if ($join->getOn()) {
-                $string .= $join->getOn().' ';
+                $string .= 'On '.$join->getOn().' ';
             }
         }
 
@@ -316,8 +325,10 @@ class DB {
             }
             $string .= $where->getColumn();
             $string .= ' '.$where->getCompareOperator().' ';
-            $string .= $where->getValue().' ';
+            $string .= self::$connection->quote($where->getValue()).' ';
         }
+
+        $string = ltrim($string, '&&');
 
         if ($string) {
             return trim('Where '.$string);
@@ -399,8 +410,43 @@ class DB {
         return '';
     }
 
-    public static function raw($query) {
+    public function groupBy($column) {
+        $this->groupBys[] = new GroupBy($column);
+        return self::$self;
+    }
 
+    /**
+     *  Get all group bys and return them as a string.
+     *  @return  string
+     */
+    private function getGroupBys() {
+        $string = '';
+
+        foreach ($this->groupBys as $groupBy) {
+            $string .= $groupBy->getColumn().', ';
+        }
+
+        if ($string) {
+            return trim('Group by '.$string, ', ');
+        }
+
+        return '';
+    }
+
+    /**
+     * Raw lets the user run any query. This must be used with caution
+     * since the framework won't escape anything automagically.
+     * @param   string  $query
+     * @return  array
+     */
+    public static function raw($query, $mode=self::OBJECTS) {
+        if (!self::$connect) {
+            throw new Exception('The database connection is turned off. Switch it on in the config file.');
+        }
+
+        self::$preparedStatement = self::$connection->prepare($query);
+        self::execute();
+        return self::$preparedStatement->fetchAll($mode);
     }
 
     /**
@@ -485,7 +531,7 @@ class DB {
      * Update method.
      * @param   array  $keys
      * @param   array  $values
-     * @return  void
+     * @return  bool
      */
     public function update(Array $keys, $values=array()) {
         // runs the code below if the user has passed a second array of values.
@@ -520,6 +566,27 @@ class DB {
             $i++;
             self::$preparedStatement->bindValue($i, $value, $this->getParamType($value));
         }
+
+        self::clean();
+        return self::$preparedStatement->execute();
+    }
+
+    /**
+     * Delete method. Before a delete can take action the user must have called
+     * where() before. This is to reduce the risk of removing all posts by
+     * mistake. You can force to remove all posts inside a table by passing
+     * "true".
+     * @param   bool  $force
+     * @return  bool
+     */
+    public function delete($force=false) {
+        if ($force) {
+            $query = 'Delete From '.$this->getTables().';';
+        } else {
+            $query = 'Delete From '.$this->getTables().' '.$this->getWheres().';';
+        }
+
+        self::$preparedStatement = self::$connection->prepare($query);
 
         self::clean();
         return self::$preparedStatement->execute();
@@ -567,12 +634,13 @@ class DB {
             $this->getTables(),
             $this->getJoins(),
             $this->getWheres(),
+            $this->getGroupBys(),
             $this->getOrderBys(),
             $this->getLimits(),
             $this->getOffsets()
         );
 
-        $query = 'Select %s From %s %s %s %s %s %s';
+        $query = 'Select %s From %s %s %s %s %s %s %s';
 
         $query = preg_replace('/\s+/', ' ', trim(vsprintf($query, $args)));
 
@@ -597,6 +665,22 @@ class DB {
     }
 
     /**
+     * Returns the last query stored in preparedStatement.
+     * @return  string
+     */
+    public static function debugQuery() {
+        return self::$preparedStatement->queryString;
+    }
+
+    /**
+     * Returns an escaped string.
+     * @return  string
+     */
+    public static function escape($string) {
+        return self::$connection->quote($string);
+    }
+
+    /**
      * Resets all values to default.
      * @return  void
      */
@@ -609,6 +693,7 @@ class DB {
         $self->ons      = array();
         $self->wheres   = array();
         $self->orderBys = array();
+        $self->groupBys = array();
         $self->limits   = 0;
         $self->offsets  = '';
     }

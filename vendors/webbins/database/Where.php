@@ -1,6 +1,6 @@
 <?php namespace Webbins\Database;
 
-use \Exception;
+use Exception;
 
 class Where {
     const AND_OPERATOR = '&&';
@@ -9,7 +9,7 @@ class Where {
     private $column;
     private $compareOperator;
     private $value;
-    private $operator;
+    private $operator = self::AND_OPERATOR;
 
     public function __construct($column, $compareOperator, $value) {
         $this->setColumn($column);
@@ -30,7 +30,7 @@ class Where {
         if (!preg_match('/(=|>|<|>=|<=|<>|!=|!<|!>|like)/i', $operator)) {
             throw new Exception('The comparison operator isn\'t valid.');
         }
-        $this->compareOperator = $operator;   
+        $this->compareOperator = $operator;
     }
 
     public function getCompareOperator() {
@@ -38,11 +38,7 @@ class Where {
     }
 
     private function setValue($value) {
-        if (is_string($value)) {
-            $this->value = '"'.$value.'"';
-        } else {
-            $this->value = $value;
-        }
+        $this->value = $value;
     }
 
     public function getValue() {

@@ -6,6 +6,7 @@ try {
 
     require('config.php');
     require('vendors/webbins/bootstrap.php');
+    require('vendors/swiftmailer/lib/swift_required.php');
 
     /* Assert options */
     assert_options(ASSERT_ACTIVE, 1);
