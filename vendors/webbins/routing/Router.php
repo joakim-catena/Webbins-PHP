@@ -359,7 +359,7 @@ class Router {
             }
         }
 
-        throw new Exception('No filter named '.$method.' was found.');
+        throw new Exception('No filter named '.$name.' was found.');
     }
 
     /**
