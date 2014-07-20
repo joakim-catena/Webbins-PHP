@@ -58,6 +58,6 @@ class Redirect {
         if (self::$basePath == '/') {
             return str_replace('//', '/', $path);
         }
-        return str_replace('//', '/', self::$basePath.'/'.$path);
+        return str_replace('//', '/', self::$basePath.$path);
     }
 }
