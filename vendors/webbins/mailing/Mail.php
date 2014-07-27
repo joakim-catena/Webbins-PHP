@@ -24,8 +24,13 @@ class Mail {
      * @param   string  $alias
      * @param   string  $username
      * @param   string  $password
+     * @param   bool    $connect
      */
-    public function __construct($host, $port, $from, $alias='', $username='', $password='') {
+    public function __construct($host, $port, $from, $alias='', $username='', $password='', $connect=false) {
+        if (!$connect) {
+            return false;
+        }
+
         self::$message = new Message();
 
         $this->host = $host;

@@ -32,7 +32,8 @@ new Mailing\Mail(
     Config::get('mail:sender'),
     Config::get('mail:alias'),
     Config::get('mail:username'),
-    Config::get('mail:password')
+    Config::get('mail:password'),
+    Config::get('mail:connect')
 );
 
 new Database\DB(

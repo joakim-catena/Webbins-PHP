@@ -70,6 +70,13 @@ $config = [
      */
     'mail' => [
         /**
+         * Connect specifies if the application should use email.
+         * Be sure to specify host, user, pass and database below.
+         * @var  bool
+         */
+        'connect' => false,
+
+        /**
          * Specify the host that the application should connect to.
          * @var  string
          */
