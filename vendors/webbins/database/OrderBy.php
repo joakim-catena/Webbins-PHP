@@ -7,8 +7,8 @@ class OrderBy {
      * The state of the order.
      * @var  const
      */
-    const ASC = 'Asc';
-    const DESC = 'Desc';
+    const ASC = 'ASC';
+    const DESC = 'DESC';
 
     /**
      * Column.
@@ -57,7 +57,7 @@ class OrderBy {
      * @throws  Exception
      */
     private function setOrder($order) {
-        switch ($order) {
+        switch (strtoupper($order)) {
             case self::ASC:
                 $this->order = self::ASC;
                 break;
