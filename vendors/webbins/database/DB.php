@@ -90,6 +90,18 @@ class DB {
 
     private static $lastQuery = '';
 
+    private $drive;
+
+    private $host;
+
+    private $database;
+
+    private $user;
+
+    private $password;
+
+    private $charset;
+
     /**
      * Construct. Stores an instance of itself so static
      * methods can use it.
@@ -106,11 +118,26 @@ class DB {
 
         self::$connect = $connect;
 
-        if ($connect) {
-            $dsn = $driver.':dbname='.$database.';host='.$host.';charset='.$charset;
+        $this->driver = $driver;
+        $this->host = $host;
+        $this->database = $database;
+        $this->user = $user;
+        $this->password = $password;
+        $this->charset = $charset;
 
-            self::$connection = new PDO($dsn, $user, $password);
+        if ($connect) {
+            self::setConnection($host, $user, $password, $database, $driver, $charset);
         }
+    }
+
+    public static function setConnection($host, $user, $password, $database, $driver, $charset) {
+        $dsn = $driver.':dbname='.$database.';host='.$host.';charset='.$charset;
+
+        self::$connection = new PDO($dsn, $user, $password);
+    }
+
+    public static function setDatabase($database) {
+        self::$connection->exec('use '.$database);
     }
 
     /**
