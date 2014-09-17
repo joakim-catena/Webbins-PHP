@@ -26,20 +26,16 @@ class Config {
      * @throws  Exception if the requested config couldn't be found.
      */
     public static function get($config) {
-        if (preg_match('/(\w+)\:(\w+)/', $config, $m)) {
-            if (isset(self::$config[$m[1]][$m[2]])) {
-                $return = self::$config[$m[1]][$m[2]];
+        $depth = explode(':', $config);
+
+        $config = self::$config;
+        for ($i=0; $i<count($depth); $i++) {
+            if (!isset($config[$depth[$i]])) {
+                throw new Exception("The config ".$config." couldn't be found.");
             }
-        } else {
-            if (isset(self::$config[$config])) {
-                $return = self::$config[$config];
-            }
+            $config = $config[$depth[$i]];
         }
 
-        if (!isset($return)) {
-            throw new Exception("The config ".$config." couldn't be found.");
-        }
-
-        return $return;
+        return $config;
     }
 }
